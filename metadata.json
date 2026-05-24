@@ -1,0 +1,8 @@
+{
+  "name": "India Pulse",
+  "description": "An Indian Economy and political news aggregator dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

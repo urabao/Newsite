@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>India Pulse — Indian Economy & News Aggregator</title>
+  <meta name="theme-color" content="#0A0A0A" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Epilogue:wght@400;500;700&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+</head>
+<body>
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen">
+    <div id="loading-ticker">INDIA PULSE — FETCHING LIVE DATA...</div>
+    <div id="skeleton-grid">
+      <!-- 8x skeleton card divs injected here by JS -->
+    </div>
+  </div>
+
+  <!-- MAIN DASHBOARD -->
+  <div id="dashboard" class="hidden">
+
+    <!-- HEADER -->
+    <header id="site-header">
+      <div id="header-logo">INDIA<span>PULSE</span></div>
+      <div id="header-meta">
+        <span id="last-updated">--</span>
+        <span id="article-count">-- articles</span>
+      </div>
+      <div id="city-control">
+        <label for="city-input">LOCAL NEWS FOR:</label>
+        <input type="text" id="city-input" placeholder="Surat" value="Surat" />
+        <button id="city-submit">GO</button>
+      </div>
+    </header>
+
+    <!-- CATEGORY FILTER BAR -->
+    <nav id="filter-bar">
+      <button class="filter-btn active" data-category="all">ALL</button>
+      <button class="filter-btn" data-category="power">⚡ POWER</button>
+      <button class="filter-btn" data-category="oil">🛢 OIL & GAS</button>
+      <button class="filter-btn" data-category="tech">💻 TECH</button>
+      <button class="filter-btn" data-category="banking">📈 MARKETS</button>
+      <button class="filter-btn" data-category="politics">🏛 POLITICS</button>
+      <button class="filter-btn" data-category="infrastructure">🏗 INFRA</button>
+      <button class="filter-btn" data-category="local">📍 LOCAL</button>
+      <button class="filter-btn" data-category="opinions">✍ OPINIONS</button>
+    </nav>
+
+    <!-- HEADLINE TICKER BAR -->
+    <div id="ticker-wrap">
+      <span id="ticker-label">LIVE</span>
+      <div id="ticker-content-container">
+        <div id="ticker-content" aria-live="off"></div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT GRID -->
+    <main id="news-grid">
+      <!-- Article cards injected by app.js -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer">
+      <span>INDIA PULSE © 2026 — DATA FROM PUBLIC RSS FEEDS</span>
+      <button id="refresh-btn">↻ REFRESH</button>
+    </footer>
+
+  </div>
+
+  <!-- FULL SCREEN ARTICLE READER PANEL -->
+  <div id="reader-overlay" class="hidden"></div>
+  <div id="reader-panel" class="hidden" role="dialog" aria-modal="true" aria-label="Article Reader">
+
+    <div id="reader-header">
+      <div id="reader-header-meta">
+        <span id="reader-category-badge" class="card-category-badge"></span>
+        <span id="reader-source"></span>
+        <span id="reader-time"></span>
+        <span id="reader-author"></span>
+      </div>
+      <h1 id="reader-title"></h1>
+      <button id="reader-close" aria-label="Close reader">✕ CLOSE</button>
+    </div>
+
+    <div id="reader-body">
+      <!-- Content injected by renderReaderContent() -->
+      <div id="reader-loading" class="hidden">
+        <div class="reader-skeleton-line wide"></div>
+        <div class="reader-skeleton-line"></div>
+        <div class="reader-skeleton-line wide"></div>
+        <div class="reader-skeleton-line narrow"></div>
+        <div class="reader-skeleton-line wide"></div>
+        <div class="reader-skeleton-line"></div>
+      </div>
+      <div id="reader-content"></div>
+    </div>
+
+    <div id="reader-paywall-block" class="hidden">
+      <div id="reader-paywall-icon">🔒</div>
+      <p id="reader-paywall-message">This article requires a subscription to read in full.</p>
+      <div id="reader-paywall-actions">
+        <a id="reader-link-original" href="#" target="_blank" rel="noopener noreferrer" class="reader-action-btn primary">READ ON SITE →</a>
+        <a id="reader-link-12ft" href="#" target="_blank" rel="noopener noreferrer" class="reader-action-btn">TRY 12FT.IO →</a>
+        <a id="reader-link-cache" href="#" target="_blank" rel="noopener noreferrer" class="reader-action-btn">GOOGLE CACHE →</a>
+      </div>
+      <p id="reader-paywall-note">12ft.io attempts to bypass soft paywalls. Not guaranteed. For full access, consider supporting the publication.</p>
+    </div>
+
+  </div>
+
+  <!-- LOAD SCRIPTS -->
+  <script src="categorizer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
