@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useMemo, FormEvent } from "react";
 import { Article } from "./types.js";
+import { TAXONOMY } from "./categorizer";
 
-const DEFAULT_CITY = "Surat";
+const DEFAULT_CITY = "";
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
 export default function App() {
@@ -12,6 +13,12 @@ export default function App() {
   const [lastFetched, setLastFetched] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
+
+  // Reader state
+  const [readerOpen, setReaderOpen] = useState<boolean>(false);
+  const [readerArticle, setReaderArticle] = useState<Article | null>(null);
+  const [readerContent, setReaderContent] = useState<any>(null);
+  const [readerLoading, setReaderLoading] = useState<boolean>(false);
 
   // Time formatter helper
   const formatRelativeTime = useCallback((isoString: string): string => {
@@ -52,39 +59,57 @@ export default function App() {
     setIsLoading(true);
     setErrorStatus(null);
     try {
-      // Parallel fetch using Promise.allSettled
-      const [newsRes, localRes] = await Promise.allSettled([
+      // Parallel fetch using Promise.allSettled: national news, opinions, and local
+      const fetchPromises: Promise<Response>[] = [
         fetch(`/api/news?category=all&limit=60`),
-        fetch(`/api/local?city=${encodeURIComponent(targetCity)}&lang=en`)
-      ]);
+        fetch(`/api/opinions?limit=30`)
+      ];
+
+      let localResIndex = -1;
+      if (targetCity) {
+        localResIndex = fetchPromises.length;
+        fetchPromises.push(fetch(`/api/local?city=${encodeURIComponent(targetCity)}&lang=en`));
+      }
+
+      const results = await Promise.allSettled(fetchPromises);
 
       let parsedNewsArticles: Article[] = [];
+      let parsedOpinionArticles: Article[] = [];
       let parsedLocalArticles: Article[] = [];
+
+      const newsRes = results[0];
+      const opinionsRes = results[1];
 
       if (newsRes.status === "fulfilled" && newsRes.value.ok) {
         const json = await newsRes.value.json();
         if (json.success && Array.isArray(json.articles)) {
           parsedNewsArticles = json.articles;
         }
-      } else {
-        console.error("Failed to parse standard news aggregators");
       }
 
-      if (localRes.status === "fulfilled" && localRes.value.ok) {
-        const json = await localRes.value.json();
+      if (opinionsRes.status === "fulfilled" && opinionsRes.value.ok) {
+        const json = await opinionsRes.value.json();
         if (json.success && Array.isArray(json.articles)) {
-          parsedLocalArticles = json.articles;
+          parsedOpinionArticles = json.articles;
         }
-      } else {
-        console.error("Failed to parse local news aggregator");
       }
 
-      if (parsedNewsArticles.length === 0 && parsedLocalArticles.length === 0) {
-        throw new Error("No economic or political news feeds could be fetched at this time");
+      if (localResIndex !== -1) {
+        const localRes = results[localResIndex];
+        if (localRes.status === "fulfilled" && localRes.value.ok) {
+          const json = await localRes.value.json();
+          if (json.success && Array.isArray(json.articles)) {
+            parsedLocalArticles = json.articles;
+          }
+        }
       }
 
-      // Merge results: local articles appended at the end
-      const merged = [...parsedNewsArticles, ...parsedLocalArticles];
+      if (parsedNewsArticles.length === 0 && parsedOpinionArticles.length === 0 && parsedLocalArticles.length === 0) {
+        throw new Error("No economic, editorial, or political news feeds could be fetched at this time");
+      }
+
+      // Merge: national news first, opinions second, local last
+      const merged = [...parsedNewsArticles, ...parsedOpinionArticles, ...parsedLocalArticles];
       setAllArticles(merged);
       setLastFetched(new Date().toISOString());
       setActiveCity(targetCity);
@@ -116,6 +141,14 @@ export default function App() {
     }
   };
 
+  const getBadgeContent = useCallback((cat: string) => {
+    if (cat === "general") return "◆ general";
+    if (cat === "local") return "📍 local";
+    const tax = TAXONOMY[cat as keyof typeof TAXONOMY];
+    if (tax) return `${tax.emoji} ${tax.label.toLowerCase()}`;
+    return `◆ ${cat}`;
+  }, []);
+
   // Category filter mapping
   const filteredArticles = useMemo(() => {
     if (activeCategory === "all") {
@@ -130,11 +163,61 @@ export default function App() {
   const tickerText = useMemo(() => {
     const limitArticles = allArticles.slice(0, 10);
     if (limitArticles.length === 0) {
-      return "INDIA PULSE — FETCHING LIVE ECONOMY, TECH, POLITICS & TOWN NEWS FEEDS...";
+      return "INDIA PULSE — FETCHING LIVE ECONOMY, EDITORIALS, POLITICS & TOWN NEWS FEEDS...";
     }
     const titlesJoined = limitArticles.map(a => a.title.toUpperCase()).join(" — ◆ — ");
     return `${titlesJoined} — ◆ — ${titlesJoined}`;
   }, [allArticles]);
+
+  const openReader = async (article: Article) => {
+    setReaderOpen(true);
+    setReaderArticle(article);
+    setReaderContent(null);
+    setReaderLoading(true);
+    document.body.style.overflow = "hidden";
+
+    try {
+      const res = await fetch(`/api/article?url=${encodeURIComponent(article.url)}`);
+      const data = await res.json();
+      setReaderContent(data);
+    } catch (err) {
+      setReaderContent({
+        success: false,
+        originalUrl: article.url,
+        archiveUrl: `https://12ft.io/${article.url}`,
+        googleCacheUrl: `https://webcache.googleusercontent.com/search?q=cache:${encodeURIComponent(article.url)}`
+      });
+    } finally {
+      setReaderLoading(false);
+    }
+  };
+
+  const closeReader = () => {
+    setReaderOpen(false);
+    setReaderArticle(null);
+    setReaderContent(null);
+    document.body.style.overflow = "";
+  };
+
+  // Keyboard Escape to close reader
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && readerOpen) {
+        closeReader();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [readerOpen]);
+
+  // Focus close button on open
+  useEffect(() => {
+    if (readerOpen) {
+      setTimeout(() => {
+        document.getElementById("reader-close")?.focus();
+      }, 50);
+    }
+  }, [readerOpen]);
 
   return (
     <>
@@ -168,7 +251,7 @@ export default function App() {
               id="city-input"
               value={cityInput}
               onChange={(e) => setCityInput(e.target.value)}
-              placeholder="Surat"
+              placeholder="Enter your city..."
             />
             <button type="submit" id="city-submit">
               GO
@@ -185,52 +268,22 @@ export default function App() {
           >
             ALL
           </button>
-          <button
-            className={`filter-btn ${activeCategory === "power" ? "active" : ""}`}
-            data-category="power"
-            onClick={() => setActiveCategory("power")}
-          >
-            ⚡ POWER
-          </button>
-          <button
-            className={`filter-btn ${activeCategory === "oil" ? "active" : ""}`}
-            data-category="oil"
-            onClick={() => setActiveCategory("oil")}
-          >
-            🛢 OIL & GAS
-          </button>
-          <button
-            className={`filter-btn ${activeCategory === "tech" ? "active" : ""}`}
-            data-category="tech"
-            onClick={() => setActiveCategory("tech")}
-          >
-            💻 TECH
-          </button>
-          <button
-            className={`filter-btn ${activeCategory === "banking" ? "active" : ""}`}
-            data-category="banking"
-            onClick={() => setActiveCategory("banking")}
-          >
-            📈 MARKETS
-          </button>
-          <button
-            className={`filter-btn ${activeCategory === "politics" ? "active" : ""}`}
-            data-category="politics"
-            onClick={() => setActiveCategory("politics")}
-          >
-            🏛 POLITICS
-          </button>
-          <button
-            className={`filter-btn ${activeCategory === "infrastructure" ? "active" : ""}`}
-            data-category="infrastructure"
-            onClick={() => setActiveCategory("infrastructure")}
-          >
-            🏗 INFRA
-          </button>
+          {Object.entries(TAXONOMY).map(([key, item]) => (
+            <button
+              key={key}
+              className={`filter-btn ${activeCategory === key ? "active" : ""}`}
+              data-category={key}
+              onClick={() => setActiveCategory(key)}
+            >
+              {item.emoji} {item.label.toUpperCase()}
+            </button>
+          ))}
           <button
             className={`filter-btn ${activeCategory === "local" ? "active" : ""}`}
             data-category="local"
             onClick={() => setActiveCategory("local")}
+            disabled={!activeCity}
+            aria-disabled={!activeCity}
           >
             📍 LOCAL
           </button>
@@ -263,13 +316,11 @@ export default function App() {
               const isFeatured = index === 0 && activeCategory === "all" && !!article.imageUrl;
 
               return (
-                <a
+                <div
                   key={article.id}
-                  href={article.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className={`news-card ${isFeatured ? "featured" : ""}`}
                   data-category={article.category}
+                  onClick={() => openReader(article)}
                 >
                   {article.imageUrl && (
                     <img
@@ -281,20 +332,23 @@ export default function App() {
                   )}
                   <div className="card-body">
                     <div className="card-source-row">
-                      <span>{article.source}</span>
+                      <span className="flex items-center gap-2">
+                        {article.publicationName || article.source}
+                        {article.category === "opinions" && article.author && (
+                          <>
+                            &middot;{" "}
+                            <span className="card-author">
+                              BY {article.author.toUpperCase()}
+                            </span>
+                          </>
+                        )}
+                      </span>
                       <span className="card-time">{formatRelativeTime(article.publishedAt)}</span>
                     </div>
 
                     <div className="flex justify-start">
                       <span className="card-category-badge">
-                        {article.category === "power" && "⚡ power"}
-                        {article.category === "oil" && "🛢 oil & gas"}
-                        {article.category === "tech" && "💻 tech"}
-                        {article.category === "banking" && "📈 markets"}
-                        {article.category === "politics" && "🏛 politics"}
-                        {article.category === "infrastructure" && "🏗 infra"}
-                        {article.category === "local" && "📍 local"}
-                        {article.category === "general" && "◆ general"}
+                        {getBadgeContent(article.category)}
                       </span>
                     </div>
 
@@ -320,7 +374,7 @@ export default function App() {
                   <button className="card-read-more" aria-label={`Read ${article.title}`}>
                     READ ARTICLE ◆
                   </button>
-                </a>
+                </div>
               );
             })}
 
@@ -340,6 +394,178 @@ export default function App() {
           </button>
         </footer>
       </div>
+
+      {/* ARTICLE READER PANEL */}
+      {readerOpen && readerArticle && (
+        <>
+          <div id="reader-overlay" onClick={closeReader} />
+          <div
+            id="reader-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Article Reader"
+          >
+            <div id="reader-header">
+              <div id="reader-header-meta">
+                <span id="reader-category-badge" className="card-category-badge">
+                  {getBadgeContent(readerArticle.category)}
+                </span>
+                <span id="reader-source">
+                  {readerArticle.publicationName || readerArticle.source}
+                </span>
+                <span id="reader-time">
+                  {formatRelativeTime(readerArticle.publishedAt)}
+                </span>
+                {readerArticle.author && (
+                  <span id="reader-author" className="card-author">
+                    BY {readerArticle.author.toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <h1 id="reader-title">{readerArticle.title}</h1>
+              <button id="reader-close" aria-label="Close reader" onClick={closeReader}>
+                ✕ CLOSE
+              </button>
+            </div>
+
+            <div id="reader-body">
+              {readerLoading && (
+                <div id="reader-loading">
+                  <div className="reader-skeleton-line wide"></div>
+                  <div className="reader-skeleton-line"></div>
+                  <div className="reader-skeleton-line wide"></div>
+                  <div className="reader-skeleton-line narrow"></div>
+                  <div className="reader-skeleton-line wide"></div>
+                  <div className="reader-skeleton-line"></div>
+                </div>
+              )}
+
+              {!readerLoading && readerContent && (
+                <div id="reader-content">
+                  {readerContent.success === false ? (
+                    <>
+                      <div
+                        id="reader-error"
+                        className="font-mono p-4 mb-4 bg-red-950/40 border-2 border-red-900 text-red-400 rounded-lg text-sm"
+                      >
+                        Could not load article.
+                      </div>
+                      <div id="reader-links-block" className="flex flex-wrap gap-4 mt-4">
+                        <a
+                          href={readerContent.originalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="reader-action-btn primary"
+                        >
+                          READ ON SITE →
+                        </a>
+                        <a
+                          href={readerContent.archiveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="reader-action-btn"
+                        >
+                          TRY 12FT.IO →
+                        </a>
+                        <a
+                          href={readerContent.googleCacheUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="reader-action-btn"
+                        >
+                          GOOGLE CACHE →
+                        </a>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Paywall scenario */}
+                      {readerContent.paywalled === true && (
+                        <>
+                          {readerContent.bodyText &&
+                            readerContent.bodyText.split("\n\n").map((p: string, idx: number) => (
+                              <p key={idx}>{p}</p>
+                            ))}
+                          <div id="reader-paywall-block" className="rounded-lg p-6 bg-zinc-900 border-4 border-black text-center my-6">
+                            <div id="reader-paywall-icon" className="text-4xl mb-4">🔒</div>
+                            <p id="reader-paywall-message" className="font-display text-xl text-white mb-6">
+                              This article requires a subscription to read in full.
+                            </p>
+                            <div id="reader-paywall-actions" className="flex flex-wrap justify-center gap-4 mb-6">
+                              <a
+                                id="reader-link-original"
+                                href={readerContent.originalUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="reader-action-btn primary"
+                              >
+                                READ ON SITE →
+                              </a>
+                              <a
+                                id="reader-link-12ft"
+                                href={readerContent.archiveUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="reader-action-btn"
+                              >
+                                TRY 12FT.IO →
+                              </a>
+                              <a
+                                id="reader-link-cache"
+                                href={readerContent.googleCacheUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="reader-action-btn"
+                              >
+                                GOOGLE CACHE →
+                              </a>
+                            </div>
+                            <p id="reader-paywall-note" className="font-mono text-[10px] text-gray-500 max-w-sm mx-auto leading-relaxed">
+                              12ft.io attempts to bypass soft paywalls. Not guaranteed. For
+                              full access, consider supporting the publication.
+                            </p>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Free full text scenario */}
+                      {readerContent.paywalled === false && readerContent.bodyText && (
+                        <>
+                          {readerContent.heroImage && (
+                            <img
+                              src={readerContent.heroImage}
+                              alt="Hero Image"
+                              className="w-full border-4 border-black rounded-lg mb-6 max-h-96 object-cover"
+                              referrerPolicy="no-referrer"
+                            />
+                          )}
+                          {readerContent.bodyText.split("\n\n").map((p: string, idx: number) => (
+                            <p key={idx}>{p}</p>
+                          ))}
+                          <div id="reader-links-block" className="flex items-center justify-between border-t-2 border-dashed border-zinc-800 pt-6 mt-6">
+                            <a
+                              href={readerContent.originalUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="reader-action-btn primary"
+                            >
+                              OPEN ORIGINAL →
+                            </a>
+                            <span id="reader-word-count" className="font-mono text-xs text-zinc-500">
+                              {readerContent.wordCount} words &middot; ~
+                              {Math.ceil(readerContent.wordCount / 200)} min read
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

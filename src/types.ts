@@ -8,6 +8,8 @@ export interface Article {
   imageUrl: string | null;
   tags: string[];
   category: string;
+  author?: string | null;
+  publicationName?: string;
 }
 
 export interface NewsResponse {

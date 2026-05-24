@@ -34,7 +34,7 @@
 
 ## Changing Default City
 - Open `public/app.js`
-- Change `const DEFAULT_CITY = 'Surat'` to your city name
+- Change `const DEFAULT_CITY = 'India'` to your city name
 - Redeploy
 
 ## Free Tier Limits (Vercel Hobby)

@@ -9,14 +9,40 @@
   --col-text-secondary: #8A8A8A;
 
   /* CATEGORY ACCENT COLORS — BOLD, HIGH CONTRAST */
-  --col-power: #FFE500;      /* Electric yellow */
-  --col-oil: #FF6B2B;        /* Crude orange */
-  --col-tech: #00FFB2;       /* Terminal green */
-  --col-banking: #C8FF00;    /* Acid green */
-  --col-politics: #FF3366;   /* Hot pink-red */
-  --col-infrastructure: #4DAAFF; /* Blueprint blue */
-  --col-local: #BF7FFF;      /* Lavender */
-  --col-general: #FFFFFF;    /* White fallback */
+  --col-power: #FFE500;
+  --col-renewable: #32CD32;
+  --col-oil_gas: #FF6B2B;
+  --col-nuclear: #BA55D3;
+  --col-banking: #C8FF00;
+  --col-markets: #00BFFF;
+  --col-insurance: #FF8C00;
+  --col-fintech: #FFD700;
+  --col-it_services: #00FFB2;
+  --col-startups: #FF1493;
+  --col-ai_deeptech: #1E90FF;
+  --col-telecom: #FF69B4;
+  --col-auto_ev: #FFA500;
+  --col-pharma_health: #00FA9A;
+  --col-defence: #A0522D;
+  --col-steel_metals: #708090;
+  --col-chemicals: #9370DB;
+  --col-textiles: #FFB6C1;
+  --col-fmcg: #F0E68C;
+  --col-infrastructure: #4DAAFF;
+  --col-railways: #CD5C5C;
+  --col-aviation_ports: #87CEEB;
+  --col-real_estate: #DEB887;
+  --col-agriculture: #2E8B57;
+  --col-education: #6495ED;
+  --col-media_entertainment: #DA70D6;
+  --col-logistics: #CD853F;
+  --col-tourism_hospitality: #FFDAB9;
+  --col-politics: #FF3366;
+  --col-economy_macro: #F5DEB3;
+  --col-international: #4682B4;
+  --col-opinions: #F5F0E8;
+  --col-local: #BF7FFF;
+  --col-general: #FFFFFF;
 
   /* TYPOGRAPHY */
   --font-display: 'Georgia', serif;
@@ -224,13 +250,47 @@ body {
 .filter-btn.active { background: var(--col-text-primary); color: #000; border-color: #000; box-shadow: var(--shadow-sm); }
 
 /* Per-category active colors */
-.filter-btn.active[data-category="power"] { background: var(--col-power); }
-.filter-btn.active[data-category="oil"] { background: var(--col-oil); }
-.filter-btn.active[data-category="tech"] { background: var(--col-tech); }
-.filter-btn.active[data-category="banking"] { background: var(--col-banking); }
-.filter-btn.active[data-category="politics"] { background: var(--col-politics); }
-.filter-btn.active[data-category="infrastructure"] { background: var(--col-infrastructure); }
-.filter-btn.active[data-category="local"] { background: var(--col-local); }
+.filter-btn.active[data-category="power"] { background: var(--col-power); color: #000; }
+.filter-btn.active[data-category="renewable"] { background: var(--col-renewable); color: #000; }
+.filter-btn.active[data-category="oil_gas"] { background: var(--col-oil_gas); color: #000; }
+.filter-btn.active[data-category="nuclear"] { background: var(--col-nuclear); color: #000; }
+.filter-btn.active[data-category="banking"] { background: var(--col-banking); color: #000; }
+.filter-btn.active[data-category="markets"] { background: var(--col-markets); color: #000; }
+.filter-btn.active[data-category="insurance"] { background: var(--col-insurance); color: #000; }
+.filter-btn.active[data-category="fintech"] { background: var(--col-fintech); color: #000; }
+.filter-btn.active[data-category="it_services"] { background: var(--col-it_services); color: #000; }
+.filter-btn.active[data-category="startups"] { background: var(--col-startups); color: #000; }
+.filter-btn.active[data-category="ai_deeptech"] { background: var(--col-ai_deeptech); color: #000; }
+.filter-btn.active[data-category="telecom"] { background: var(--col-telecom); color: #000; }
+.filter-btn.active[data-category="auto_ev"] { background: var(--col-auto_ev); color: #000; }
+.filter-btn.active[data-category="pharma_health"] { background: var(--col-pharma_health); color: #000; }
+.filter-btn.active[data-category="defence"] { background: var(--col-defence); color: #000; }
+.filter-btn.active[data-category="steel_metals"] { background: var(--col-steel_metals); color: #000; }
+.filter-btn.active[data-category="chemicals"] { background: var(--col-chemicals); color: #000; }
+.filter-btn.active[data-category="textiles"] { background: var(--col-textiles); color: #000; }
+.filter-btn.active[data-category="fmcg"] { background: var(--col-fmcg); color: #000; }
+.filter-btn.active[data-category="infrastructure"] { background: var(--col-infrastructure); color: #000; }
+.filter-btn.active[data-category="railways"] { background: var(--col-railways); color: #000; }
+.filter-btn.active[data-category="aviation_ports"] { background: var(--col-aviation_ports); color: #000; }
+.filter-btn.active[data-category="real_estate"] { background: var(--col-real_estate); color: #000; }
+.filter-btn.active[data-category="agriculture"] { background: var(--col-agriculture); color: #000; }
+.filter-btn.active[data-category="education"] { background: var(--col-education); color: #000; }
+.filter-btn.active[data-category="media_entertainment"] { background: var(--col-media_entertainment); color: #000; }
+.filter-btn.active[data-category="logistics"] { background: var(--col-logistics); color: #000; }
+.filter-btn.active[data-category="tourism_hospitality"] { background: var(--col-tourism_hospitality); color: #000; }
+.filter-btn.active[data-category="politics"] { background: var(--col-politics); color: #000; }
+.filter-btn.active[data-category="economy_macro"] { background: var(--col-economy_macro); color: #000; }
+.filter-btn.active[data-category="international"] { background: var(--col-international); color: #000; }
+.filter-btn.active[data-category="opinions"] { background: var(--col-opinions); color: #000; }
+.filter-btn.active[data-category="local"] { background: var(--col-local); color: #000; }
+
+.filter-btn:disabled,
+.filter-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  border-color: #222;
+}
 
 /* TICKER BAR */
 #ticker-wrap {
@@ -338,13 +398,55 @@ body {
 
 /* Category color assignment via data attributes */
 .news-card[data-category="power"] { --card-accent-color: var(--col-power); }
-.news-card[data-category="oil"] { --card-accent-color: var(--col-oil); }
-.news-card[data-category="tech"] { --card-accent-color: var(--col-tech); }
+.news-card[data-category="renewable"] { --card-accent-color: var(--col-renewable); }
+.news-card[data-category="oil_gas"] { --card-accent-color: var(--col-oil_gas); }
+.news-card[data-category="nuclear"] { --card-accent-color: var(--col-nuclear); }
 .news-card[data-category="banking"] { --card-accent-color: var(--col-banking); }
-.news-card[data-category="politics"] { --card-accent-color: var(--col-politics); }
+.news-card[data-category="markets"] { --card-accent-color: var(--col-markets); }
+.news-card[data-category="insurance"] { --card-accent-color: var(--col-insurance); }
+.news-card[data-category="fintech"] { --card-accent-color: var(--col-fintech); }
+.news-card[data-category="it_services"] { --card-accent-color: var(--col-it_services); }
+.news-card[data-category="startups"] { --card-accent-color: var(--col-startups); }
+.news-card[data-category="ai_deeptech"] { --card-accent-color: var(--col-ai_deeptech); }
+.news-card[data-category="telecom"] { --card-accent-color: var(--col-telecom); }
+.news-card[data-category="auto_ev"] { --card-accent-color: var(--col-auto_ev); }
+.news-card[data-category="pharma_health"] { --card-accent-color: var(--col-pharma_health); }
+.news-card[data-category="defence"] { --card-accent-color: var(--col-defence); }
+.news-card[data-category="steel_metals"] { --card-accent-color: var(--col-steel_metals); }
+.news-card[data-category="chemicals"] { --card-accent-color: var(--col-chemicals); }
+.news-card[data-category="textiles"] { --card-accent-color: var(--col-textiles); }
+.news-card[data-category="fmcg"] { --card-accent-color: var(--col-fmcg); }
 .news-card[data-category="infrastructure"] { --card-accent-color: var(--col-infrastructure); }
+.news-card[data-category="railways"] { --card-accent-color: var(--col-railways); }
+.news-card[data-category="aviation_ports"] { --card-accent-color: var(--col-aviation_ports); }
+.news-card[data-category="real_estate"] { --card-accent-color: var(--col-real_estate); }
+.news-card[data-category="agriculture"] { --card-accent-color: var(--col-agriculture); }
+.news-card[data-category="education"] { --card-accent-color: var(--col-education); }
+.news-card[data-category="media_entertainment"] { --card-accent-color: var(--col-media_entertainment); }
+.news-card[data-category="logistics"] { --card-accent-color: var(--col-logistics); }
+.news-card[data-category="tourism_hospitality"] { --card-accent-color: var(--col-tourism_hospitality); }
+.news-card[data-category="politics"] { --card-accent-color: var(--col-politics); }
+.news-card[data-category="economy_macro"] { --card-accent-color: var(--col-economy_macro); }
+.news-card[data-category="international"] { --card-accent-color: var(--col-international); }
+.news-card[data-category="opinions"] { --card-accent-color: var(--col-opinions); }
 .news-card[data-category="local"] { --card-accent-color: var(--col-local); }
 .news-card[data-category="general"] { --card-accent-color: var(--col-general); }
+
+/* Opinion cards have an italic serif title to distinguish them visually */
+.news-card[data-category="opinions"] .card-title {
+  font-style: italic;
+  font-size: clamp(14px, 1.3vw, 17px);
+}
+
+/* Author byline on opinion cards */
+.card-author {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--col-opinions);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 
 .card-image {
   width: 100%; aspect-ratio: 16/9;
@@ -481,7 +583,189 @@ body {
 @media (max-width: 768px) {
   #site-header { grid-template-columns: 1fr; gap: var(--space-md); padding: var(--space-md); }
   #city-control { flex-wrap: wrap; }
-  #filter-bar { padding: var(--space-md); top: 0; position: relative; }
+  #filter-bar { padding: var(--space-md); top: 0; position: relative; flex-wrap: nowrap; -ms-overflow-style: none; scrollbar-width: none; }
+  #filter-bar::-webkit-scrollbar { display: none; }
   #news-grid { padding: var(--space-md); }
   #site-footer { flex-direction: column; gap: var(--space-md); text-align: center; }
+}
+
+/* READER OVERLAY */
+#reader-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 199;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fade-in 0.2s ease;
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* READER PANEL */
+#reader-panel {
+  position: fixed;
+  top: 0; right: 0;
+  width: min(720px, 100vw);
+  height: 100vh;
+  background: var(--col-surface);
+  border-left: var(--border-brutal);
+  z-index: 200;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  animation: slide-in 0.25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: -8px 0 0 #000;
+}
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* READER HEADER */
+#reader-header {
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: var(--border-brutal);
+  background: #0D0D0D;
+  flex-shrink: 0;
+  position: relative;
+}
+#reader-header-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--col-text-secondary); letter-spacing: 0.08em;
+}
+#reader-title {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.5vw, 26px);
+  line-height: 1.3;
+  color: var(--col-text-primary);
+  padding-right: 80px; /* space for close button */
+}
+#reader-author {
+  color: var(--col-opinions);
+  font-weight: 700;
+}
+#reader-close {
+  position: absolute;
+  top: var(--space-lg); right: var(--space-xl);
+  background: transparent;
+  border: var(--border-thick); border-color: #444;
+  color: var(--col-text-secondary);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  transition: all 0.15s;
+}
+#reader-close:hover { border-color: var(--col-politics); color: var(--col-politics); }
+
+/* READER BODY — SCROLLABLE */
+#reader-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xl);
+  scroll-behavior: smooth;
+}
+#reader-body::-webkit-scrollbar { width: 4px; }
+#reader-body::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+/* READER CONTENT — ARTICLE TEXT */
+#reader-content img {
+  width: 100%;
+  border: var(--border-brutal);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-lg);
+  display: block;
+}
+#reader-content p {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--col-text-primary);
+  margin-bottom: var(--space-lg);
+  max-width: 65ch;
+}
+#reader-content p:first-of-type {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--col-text-primary);
+}
+
+/* READER LINKS BLOCK */
+#reader-links-block {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: var(--border-thick);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: var(--space-md);
+}
+#reader-word-count {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--col-text-secondary); letter-spacing: 0.08em;
+}
+
+/* READER SKELETON */
+#reader-loading { display: flex; flex-direction: column; gap: var(--space-md); }
+.reader-skeleton-line {
+  height: 14px;
+  background: linear-gradient(90deg, #1A1A1A 25%, #252525 50%, #1A1A1A 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+.reader-skeleton-line.wide { width: 100%; }
+.reader-skeleton-line:not(.wide):not(.narrow) { width: 85%; }
+.reader-skeleton-line.narrow { width: 60%; }
+
+/* READER PAYWALL BLOCK */
+#reader-paywall-block {
+  margin-top: var(--space-xl);
+  padding: var(--space-xl);
+  border: var(--border-brutal);
+  border-radius: var(--radius-md);
+  background: #0D0D0D;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+#reader-paywall-icon { font-size: 40px; margin-bottom: var(--space-md); }
+#reader-paywall-message {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--col-text-primary);
+  margin-bottom: var(--space-lg);
+}
+#reader-paywall-actions {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+#reader-paywall-note {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--col-text-secondary); line-height: 1.6;
+  max-width: 40ch; margin: 0 auto;
+}
+
+/* READER ACTION BUTTONS */
+.reader-action-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: var(--border-brutal);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: transparent;
+  color: var(--col-text-primary);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.reader-action-btn:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow-md); }
+.reader-action-btn:active { transform: translate(3px, 3px); box-shadow: none; }
+.reader-action-btn.primary {
+  background: var(--col-power); color: #000; border-color: #000;
+}
+
+/* MOBILE READER */
+@media (max-width: 768px) {
+  #reader-panel { width: 100vw; border-left: none; border-top: var(--border-brutal); top: auto; bottom: 0; height: 92vh; animation: slide-up 0.25s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  #reader-title { padding-right: 0; margin-top: var(--space-md); }
+  #reader-close { position: relative; top: auto; right: auto; margin-left: auto; display: block; }
+  #reader-header { display: flex; flex-direction: column; gap: var(--space-sm); }
 }
