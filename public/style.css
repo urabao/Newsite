@@ -17,6 +17,32 @@
   --col-opinions: #FF9F43;   /* Warm amber — editorial/ink feel */
   --col-general: #FFFFFF;    /* White fallback */
 
+  /* NEW CATEGORY TOKENS */
+  --col-economy: #3498db;
+  --col-renewable: #2ecc71;
+  --col-nuclear: #9b59b6;
+  --col-fintech: #1abc9c;
+  --col-insurance: #e67e22;
+  --col-startups: #e74c3c;
+  --col-ai: #8e44ad;
+  --col-telecom: #f39c12;
+  --col-auto: #34495e;
+  --col-pharma: #16a085;
+  --col-defence: #27ae60;
+  --col-metals: #7f8c8d;
+  --col-chemicals: #d35400;
+  --col-textiles: #c0392b;
+  --col-fmcg: #f1c40f;
+  --col-railways: #2980b9;
+  --col-aviation: #3498db;
+  --col-realestate: #d35400;
+  --col-agri: #27ae60;
+  --col-logistics: #f39c12;
+  --col-education: #8e44ad;
+  --col-media: #e74c3c;
+  --col-tourism: #1abc9c;
+  --col-international: #2980b9;
+
   /* TYPOGRAPHY */
   --font-display: 'Georgia', serif;
   --font-mono: 'Courier New', monospace;
@@ -169,6 +195,11 @@ button { cursor: pointer; font-family: var(--font-mono); }
   position: sticky; top: 80px;
   z-index: 99;
   overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+#filter-bar::-webkit-scrollbar {
+  display: none;
 }
 .filter-btn {
   background: transparent;
@@ -194,6 +225,39 @@ button { cursor: pointer; font-family: var(--font-mono); }
 .filter-btn.active[data-category="infrastructure"] { background: var(--col-infrastructure); }
 .filter-btn.active[data-category="local"] { background: var(--col-local); }
 .filter-btn.active[data-category="opinions"] { background: var(--col-opinions); color: #000; }
+
+.filter-btn.active[data-category="economy_macro"] { background: var(--col-economy); }
+.filter-btn.active[data-category="renewable"] { background: var(--col-renewable); }
+.filter-btn.active[data-category="nuclear"] { background: var(--col-nuclear); }
+.filter-btn.active[data-category="fintech"] { background: var(--col-fintech); }
+.filter-btn.active[data-category="insurance"] { background: var(--col-insurance); }
+.filter-btn.active[data-category="it_services"] { background: var(--col-tech); }
+.filter-btn.active[data-category="startups"] { background: var(--col-startups); }
+.filter-btn.active[data-category="ai_deeptech"] { background: var(--col-ai); }
+.filter-btn.active[data-category="telecom"] { background: var(--col-telecom); }
+.filter-btn.active[data-category="auto_ev"] { background: var(--col-auto); color: #fff; }
+.filter-btn.active[data-category="pharma_health"] { background: var(--col-pharma); }
+.filter-btn.active[data-category="defence"] { background: var(--col-defence); }
+.filter-btn.active[data-category="steel_metals"] { background: var(--col-metals); }
+.filter-btn.active[data-category="chemicals"] { background: var(--col-chemicals); }
+.filter-btn.active[data-category="textiles"] { background: var(--col-textiles); color: #fff; }
+.filter-btn.active[data-category="fmcg"] { background: var(--col-fmcg); }
+.filter-btn.active[data-category="railways"] { background: var(--col-railways); }
+.filter-btn.active[data-category="aviation_ports"] { background: var(--col-aviation); }
+.filter-btn.active[data-category="real_estate"] { background: var(--col-realestate); }
+.filter-btn.active[data-category="agriculture"] { background: var(--col-agri); }
+.filter-btn.active[data-category="logistics"] { background: var(--col-logistics); }
+.filter-btn.active[data-category="education"] { background: var(--col-education); }
+.filter-btn.active[data-category="media_entertainment"] { background: var(--col-media); }
+.filter-btn.active[data-category="tourism_hospitality"] { background: var(--col-tourism); }
+.filter-btn.active[data-category="international"] { background: var(--col-international); }
+
+/* Local Filter Button Disabled State */
+#local-filter-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
 
 #ticker-wrap {
   display: flex; align-items: center;
@@ -287,6 +351,32 @@ button { cursor: pointer; font-family: var(--font-mono); }
 .news-card[data-category="infrastructure"] { --card-accent-color: var(--col-infrastructure); }
 .news-card[data-category="local"] { --card-accent-color: var(--col-local); }
 .news-card[data-category="opinions"] { --card-accent-color: var(--col-opinions); }
+
+.news-card[data-category="economy_macro"] { --card-accent-color: var(--col-economy); }
+.news-card[data-category="renewable"] { --card-accent-color: var(--col-renewable); }
+.news-card[data-category="nuclear"] { --card-accent-color: var(--col-nuclear); }
+.news-card[data-category="fintech"] { --card-accent-color: var(--col-fintech); }
+.news-card[data-category="insurance"] { --card-accent-color: var(--col-insurance); }
+.news-card[data-category="it_services"] { --card-accent-color: var(--col-tech); }
+.news-card[data-category="startups"] { --card-accent-color: var(--col-startups); }
+.news-card[data-category="ai_deeptech"] { --card-accent-color: var(--col-ai); }
+.news-card[data-category="telecom"] { --card-accent-color: var(--col-telecom); }
+.news-card[data-category="auto_ev"] { --card-accent-color: var(--col-auto); }
+.news-card[data-category="pharma_health"] { --card-accent-color: var(--col-pharma); }
+.news-card[data-category="defence"] { --card-accent-color: var(--col-defence); }
+.news-card[data-category="steel_metals"] { --card-accent-color: var(--col-metals); }
+.news-card[data-category="chemicals"] { --card-accent-color: var(--col-chemicals); }
+.news-card[data-category="textiles"] { --card-accent-color: var(--col-textiles); }
+.news-card[data-category="fmcg"] { --card-accent-color: var(--col-fmcg); }
+.news-card[data-category="railways"] { --card-accent-color: var(--col-railways); }
+.news-card[data-category="aviation_ports"] { --card-accent-color: var(--col-aviation); }
+.news-card[data-category="real_estate"] { --card-accent-color: var(--col-realestate); }
+.news-card[data-category="agriculture"] { --card-accent-color: var(--col-agri); }
+.news-card[data-category="logistics"] { --card-accent-color: var(--col-logistics); }
+.news-card[data-category="education"] { --card-accent-color: var(--col-education); }
+.news-card[data-category="media_entertainment"] { --card-accent-color: var(--col-media); }
+.news-card[data-category="tourism_hospitality"] { --card-accent-color: var(--col-tourism); }
+.news-card[data-category="international"] { --card-accent-color: var(--col-international); }
 
 /* Opinion cards have an italic serif title to distinguish them visually */
 .news-card[data-category="opinions"] .card-title {

@@ -34,7 +34,7 @@
       </div>
       <div id="city-control">
         <label for="city-input">LOCAL NEWS FOR:</label>
-        <input type="text" id="city-input" placeholder="Surat" value="Surat" />
+        <input type="text" id="city-input" placeholder="Enter your city..." value="" />
         <button id="city-submit">GO</button>
       </div>
     </header>
@@ -42,14 +42,61 @@
     <!-- CATEGORY FILTER BAR -->
     <nav id="filter-bar">
       <button class="filter-btn active" data-category="all">ALL</button>
+
+      <!-- ECONOMY & MACRO -->
+      <button class="filter-btn" data-category="economy_macro">📊 ECONOMY</button>
+
+      <!-- ENERGY -->
       <button class="filter-btn" data-category="power">⚡ POWER</button>
-      <button class="filter-btn" data-category="oil">🛢 OIL & GAS</button>
-      <button class="filter-btn" data-category="tech">💻 TECH</button>
-      <button class="filter-btn" data-category="banking">📈 MARKETS</button>
-      <button class="filter-btn" data-category="politics">🏛 POLITICS</button>
+      <button class="filter-btn" data-category="renewable">🌱 RENEWABLES</button>
+      <button class="filter-btn" data-category="oil_gas">🛢 OIL & GAS</button>
+      <button class="filter-btn" data-category="nuclear">☢ NUCLEAR</button>
+
+      <!-- FINANCIAL -->
+      <button class="filter-btn" data-category="banking">🏦 BANKING</button>
+      <button class="filter-btn" data-category="markets">📈 MARKETS</button>
+      <button class="filter-btn" data-category="fintech">💳 FINTECH</button>
+      <button class="filter-btn" data-category="insurance">🛡 INSURANCE</button>
+
+      <!-- TECHNOLOGY -->
+      <button class="filter-btn" data-category="it_services">💻 IT</button>
+      <button class="filter-btn" data-category="startups">🚀 STARTUPS</button>
+      <button class="filter-btn" data-category="ai_deeptech">🤖 AI</button>
+      <button class="filter-btn" data-category="telecom">📡 TELECOM</button>
+
+      <!-- MANUFACTURING -->
+      <button class="filter-btn" data-category="auto_ev">🚗 AUTO & EV</button>
+      <button class="filter-btn" data-category="pharma_health">💊 PHARMA</button>
+      <button class="filter-btn" data-category="defence">🛡 DEFENCE</button>
+      <button class="filter-btn" data-category="steel_metals">🔩 METALS</button>
+      <button class="filter-btn" data-category="chemicals">🧪 CHEMICALS</button>
+      <button class="filter-btn" data-category="textiles">🧵 TEXTILES</button>
+      <button class="filter-btn" data-category="fmcg">🛒 FMCG</button>
+
+      <!-- INFRASTRUCTURE -->
       <button class="filter-btn" data-category="infrastructure">🏗 INFRA</button>
-      <button class="filter-btn" data-category="local">📍 LOCAL</button>
+      <button class="filter-btn" data-category="railways">🚆 RAILWAYS</button>
+      <button class="filter-btn" data-category="aviation_ports">✈ AVIATION</button>
+      <button class="filter-btn" data-category="real_estate">🏠 REAL ESTATE</button>
+
+      <!-- AGRICULTURE -->
+      <button class="filter-btn" data-category="agriculture">🌾 AGRI</button>
+
+      <!-- SERVICES -->
+      <button class="filter-btn" data-category="logistics">📦 LOGISTICS</button>
+      <button class="filter-btn" data-category="education">🎓 EDUCATION</button>
+      <button class="filter-btn" data-category="media_entertainment">🎬 MEDIA</button>
+      <button class="filter-btn" data-category="tourism_hospitality">🏨 TOURISM</button>
+
+      <!-- POLITICS -->
+      <button class="filter-btn" data-category="politics">🏛 POLITICS</button>
+
+      <!-- INTERNATIONAL -->
+      <button class="filter-btn" data-category="international">🌍 WORLD</button>
+
+      <!-- SPECIAL -->
       <button class="filter-btn" data-category="opinions">✍ OPINIONS</button>
+      <button class="filter-btn" data-category="local" id="local-filter-btn" disabled>📍 LOCAL</button>
     </nav>
 
     <!-- HEADLINE TICKER BAR -->

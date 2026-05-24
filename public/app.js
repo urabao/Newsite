@@ -6,7 +6,7 @@ const ENDPOINTS = {
   article: '/api/article',
   health: '/api/health'
 };
-const DEFAULT_CITY = 'Surat';
+const DEFAULT_CITY = '';
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
 const STATE = {
@@ -67,15 +67,25 @@ async function fetchAllData() {
   setErrorState(null);
 
   try {
-    const [newsRes, localRes, opinionsRes] = await Promise.allSettled([
+    const fetchPromises = [
       fetch(`${ENDPOINTS.news}?category=all&limit=60`),
-      fetch(`${ENDPOINTS.local}?city=${encodeURIComponent(STATE.city)}&lang=en`),
       fetch(`${ENDPOINTS.opinions}?limit=30`)
-    ]);
+    ];
+
+    let localResIndex = -1;
+    if (STATE.city) {
+      localResIndex = fetchPromises.length;
+      fetchPromises.push(fetch(`${ENDPOINTS.local}?city=${encodeURIComponent(STATE.city)}&lang=en`));
+    }
+
+    const results = await Promise.allSettled(fetchPromises);
 
     let newsArticles = [];
     let localArticles = [];
     let opinionArticles = [];
+
+    const newsRes = results[0];
+    const opinionsRes = results[1];
 
     if (newsRes.status === "fulfilled" && newsRes.value.ok) {
       const json = await newsRes.value.json();
@@ -91,10 +101,18 @@ async function fetchAllData() {
       }
     }
 
-    if (localRes.status === "fulfilled" && localRes.value.ok) {
-      const json = await localRes.value.json();
-      if (json.success && Array.isArray(json.articles)) {
-        localArticles = json.articles;
+    if (localResIndex !== -1) {
+      const localRes = results[localResIndex];
+      if (localRes.status === "fulfilled" && localRes.value.ok) {
+        const json = await localRes.value.json();
+        if (json.success && Array.isArray(json.articles)) {
+          localArticles = json.articles;
+        }
+      }
+      
+      const localFilterBtn = document.getElementById("local-filter-btn");
+      if (localFilterBtn) {
+        localFilterBtn.removeAttribute("disabled");
       }
     }
 
@@ -220,16 +238,14 @@ function buildCardHTML(article, isFeatured) {
 
   const timeText = formatRelativeTime(article.publishedAt);
 
-  let categoryDisplay = article.category;
-  if (article.category === "power") categoryDisplay = "⚡ power";
-  if (article.category === "oil") categoryDisplay = "🛢 oil & gas";
-  if (article.category === "tech") categoryDisplay = "💻 tech";
-  if (article.category === "banking") categoryDisplay = "📈 markets";
-  if (article.category === "politics") categoryDisplay = "🏛 politics";
-  if (article.category === "infrastructure") categoryDisplay = "🏗 infra";
-  if (article.category === "local") categoryDisplay = "📍 local";
-  if (article.category === "opinions") categoryDisplay = "✍ opinions";
-  if (article.category === "general") categoryDisplay = "◆ general";
+  let categoryDisplay = article.category.toUpperCase();
+  if (typeof TAXONOMY !== "undefined" && TAXONOMY[article.category]) {
+    categoryDisplay = `${TAXONOMY[article.category].emoji} ${TAXONOMY[article.category].label.toUpperCase()}`;
+  } else if (article.category === "local") {
+    categoryDisplay = "📍 LOCAL";
+  } else if (article.category === "general") {
+    categoryDisplay = "◆ GENERAL";
+  }
 
   const tagsHTML = (article.tags || []).slice(0, 3).map(t => `<span class="card-tag">#${t.toLowerCase()}</span>`).join('');
   
@@ -269,16 +285,14 @@ async function openReader(article) {
   overlay.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
   
-  let categoryDisplay = article.category;
-  if (article.category === "power") categoryDisplay = "⚡ power";
-  if (article.category === "oil") categoryDisplay = "🛢 oil & gas";
-  if (article.category === "tech") categoryDisplay = "💻 tech";
-  if (article.category === "banking") categoryDisplay = "📈 markets";
-  if (article.category === "politics") categoryDisplay = "🏛 politics";
-  if (article.category === "infrastructure") categoryDisplay = "🏗 infra";
-  if (article.category === "local") categoryDisplay = "📍 local";
-  if (article.category === "opinions") categoryDisplay = "✍ opinions";
-  if (article.category === "general") categoryDisplay = "◆ general";
+  let categoryDisplay = article.category.toUpperCase();
+  if (typeof TAXONOMY !== "undefined" && TAXONOMY[article.category]) {
+    categoryDisplay = `${TAXONOMY[article.category].emoji} ${TAXONOMY[article.category].label.toUpperCase()}`;
+  } else if (article.category === "local") {
+    categoryDisplay = "📍 LOCAL";
+  } else if (article.category === "general") {
+    categoryDisplay = "◆ GENERAL";
+  }
   
   document.getElementById('reader-category-badge').textContent = categoryDisplay;
   document.getElementById('reader-source').textContent = article.publicationName || article.source;

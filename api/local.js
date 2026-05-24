@@ -89,38 +89,68 @@ function getImageUrl(item) {
 
 export default async function handler(req, res) {
   try {
-    const city = (req.query.city || "Surat").trim();
+    const city = (req.query.city || "").trim();
+    if (!city) {
+      return res.status(200).json({
+        success: true,
+        fetchedAt: new Date().toISOString(),
+        totalArticles: 0,
+        category: "local",
+        city: "",
+        lang: "en",
+        articles: []
+      });
+    }
     const lang = (req.query.lang || "en").toLowerCase();
 
-    const googleNewsUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(city)}+India+local&hl=${lang}-IN&gl=IN&ceid=IN:${lang}`;
-    const parsed = await safeParseURL(googleNewsUrl);
+    const cityQuery = `"${city}" local news OR "${city}" municipal OR "${city}" district`;
+    const url = `https://news.google.com/rss/search?q=${encodeURIComponent(cityQuery)}&hl=${lang}-IN&gl=IN&ceid=IN:${lang}`;
 
-    const articles = (parsed.items || []).map((item) => {
-      const title = (item.title || "").substring(0, 120).trim();
+    const bizQuery = `"${city}" business OR "${city}" industry OR "${city}" economy OR "${city}" investment`;
+    const bizUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(bizQuery)}&hl=${lang}-IN&gl=IN&ceid=IN:${lang}`;
+
+    const [parsedLocal, parsedBiz] = await Promise.all([
+      safeParseURL(url).catch(() => ({ items: [] })),
+      safeParseURL(bizUrl).catch(() => ({ items: [] }))
+    ]);
+
+    const allItems = [...(parsedLocal.items || []), ...(parsedBiz.items || [])];
+    
+    // Deduplicate by URL
+    const uniqueMap = new Map();
+    const articles = [];
+
+    for (const item of allItems) {
+      if (!item.title) continue;
+      
+      const itemUrl = item.link || item.guid || "";
+      if (uniqueMap.has(itemUrl)) continue;
+      uniqueMap.set(itemUrl, true);
+
+      const title = item.title.substring(0, 120).trim();
       const summaryText = item.contentSnippet || item.content || item.description || "";
       const summary = cleanSummary(summaryText);
-      const url = item.link || item.guid || "";
       const rawPubDate = item.isoDate || item.pubDate || new Date().toISOString();
       const publishedAt = new Date(rawPubDate).toISOString();
       const id = getSha256Id(title, publishedAt);
-      const source = getHostname(url, "news.google.com");
+      const source = getHostname(itemUrl, "news.google.com");
       const imageUrl = getImageUrl(item);
 
-      return {
+      articles.push({
         id,
         title,
         summary,
-        url,
+        url: itemUrl,
         source,
         publishedAt,
         imageUrl,
         tags: [city, "local"],
         category: "local"
-      };
-    });
+      });
+    }
 
     articles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-    const resultSlice = articles.slice(0, 20);
+    const resultSlice = articles.slice(0, 25);
 
     res.setHeader("Cache-Control", "s-maxage=600, stale-while-revalidate=1200");
     res.status(200).json({
