@@ -676,7 +676,6 @@ const RSS_FEEDS = [
   { url: "https://www.livemint.com/rss/economy", label: "Mint Economy" },
   { url: "https://www.business-standard.com/rss/economy-policy-10106.rss", label: "BS Economy" },
   { url: "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms", label: "TOI Business" },
-  { url: "https://feeds.feedburner.com/ndtvnews-business", label: "NDTV Business" },
   { url: "https://www.financialexpress.com/feed/", label: "Financial Express" },
 
   // ── ENERGY & POWER ────────────────────────────────────────────────
