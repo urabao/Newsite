@@ -676,12 +676,10 @@ const RSS_FEEDS = [
   { url: "https://www.livemint.com/rss/economy", label: "Mint Economy" },
   { url: "https://www.business-standard.com/rss/economy-policy-10106.rss", label: "BS Economy" },
   { url: "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms", label: "TOI Business" },
-  { url: "https://www.financialexpress.com/feed/", label: "Financial Express" },
 
   // ── ENERGY & POWER ────────────────────────────────────────────────
   { url: "https://economictimes.indiatimes.com/industry/energy/power/rssfeeds/13358319.cms", label: "ET Power" },
   { url: "https://economictimes.indiatimes.com/industry/renewables/rssfeeds/84401757.cms", label: "ET Renewables" },
-  { url: "https://www.mercom.in/feed/", label: "Mercom India Solar" },
   { url: "https://www.pv-tech.org/feed/", label: "PV Tech" },
 
   // ── OIL & GAS ─────────────────────────────────────────────────────
@@ -690,7 +688,6 @@ const RSS_FEEDS = [
   // ── TECHNOLOGY ────────────────────────────────────────────────────
   { url: "https://economictimes.indiatimes.com/tech/rssfeeds/13357270.cms", label: "ET Tech" },
   { url: "https://feeds.feedburner.com/gadgets360-latest", label: "Gadgets360" },
-  { url: "https://entrackr.com/feed/", label: "Entrackr Startups" },
   { url: "https://inc42.com/feed/", label: "Inc42" },
   { url: "https://www.medianama.com/feed/", label: "MediaNama Fintech/Tech" },
 
@@ -703,7 +700,6 @@ const RSS_FEEDS = [
 
   // ── PHARMA & HEALTHCARE ───────────────────────────────────────────
   { url: "https://economictimes.indiatimes.com/industry/healthcare/biotech/pharmaceuticals/rssfeeds/13358238.cms", label: "ET Pharma" },
-  { url: "https://www.pharmabiz.com/rss", label: "PharmaBiz" },
 
   // ── BANKING & FINANCE ─────────────────────────────────────────────
   { url: "https://economictimes.indiatimes.com/industry/banking/finance/rssfeeds/13358259.cms", label: "ET Banking" },
@@ -722,21 +718,16 @@ const RSS_FEEDS = [
   { url: "https://economictimes.indiatimes.com/news/defence/rssfeeds/1521542671.cms", label: "ET Defence" },
 
   // ── POLITICS & GOVERNANCE ─────────────────────────────────────────
-  { url: "https://feeds.feedburner.com/ndtvnews-india-news", label: "NDTV India" },
   { url: "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms", label: "TOI India" },
   { url: "https://www.thehindu.com/news/national/feeder/default.rss", label: "The Hindu National" },
-  { url: "https://indianexpress.com/section/india/feed/", label: "Indian Express India" },
 
   // ── INTERNATIONAL ─────────────────────────────────────────────────
   { url: "https://www.thehindu.com/news/international/feeder/default.rss", label: "The Hindu International" },
   { url: "https://timesofindia.indiatimes.com/rssfeeds/296589466.cms", label: "TOI World" },
-  { url: "https://feeds.feedburner.com/ndtvnews-world", label: "NDTV World" },
   { url: "https://economictimes.indiatimes.com/news/international/rssfeeds/1373380681.cms", label: "ET International" },
   { url: "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml", label: "NYT Business" },
   { url: "https://feeds.bbci.co.uk/news/business/rss.xml", label: "BBC Business" },
-  { url: "https://www.ft.com/world/asia-pacific?format=rss", label: "FT Asia" },
-  { url: "https://feeds.reuters.com/reuters/INtopNews", label: "Reuters India" },
-  { url: "https://feeds.reuters.com/reuters/businessNews", label: "Reuters Business" }
+  { url: "https://www.ft.com/world/asia-pacific?format=rss", label: "FT Asia" }
 
 ];
 
